@@ -1,56 +1,85 @@
-import { StyleSheet, View, Text } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-//The bubbles that appear on the left or the right for the messages.
-export default function MessageBubble({direction, text}) {
+const AMBER = '#c4823c';
+const CREAM = '#f5e6cc';
 
-    //These spacers make the message bubble stay to the left or the right, depending on who is speaking, even if the message is multiple lines.
-    var leftSpacer = direction === 'left' ? null : <View style={{width: 70}}/>;
-    var rightSpacer = direction === 'left' ? <View style={{width: 70}}/> : null;
+export default function MessageBubble({ direction, text }) {
+  const isLeft = direction === 'left';
 
-    var bubbleStyles = direction === 'left' ? [styles.messageBubble, styles.messageBubbleLeft] : [styles.messageBubble, styles.messageBubbleRight];
+  return (
+    <View style={[styles.row, isLeft ? styles.rowLeft : styles.rowRight]}>
+      {isLeft && <View style={styles.avatar}><Text style={styles.avatarText}>☕</Text></View>}
+      <View style={[styles.bubble, isLeft ? styles.bubbleLeft : styles.bubbleRight]}>
+        <Text style={[styles.text, isLeft ? styles.textLeft : styles.textRight]}>
+          {text}
+        </Text>
+      </View>
+      {!isLeft && <View style={styles.spacer} />}
+    </View>
+  );
+}
 
-    var bubbleTextStyle = direction === 'left' ? styles.messageBubbleTextLeft : styles.messageBubbleTextRight;
-
-    return (
-        <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-            {leftSpacer}
-            <View style={bubbleStyles}>
-              <Text style={bubbleTextStyle}>
-                {text}
-              </Text>
-            </View>
-            {rightSpacer}
-          </View>
-      );
-  }
-
-  const styles = StyleSheet.create({
-//MessageBubble
-
-  messageBubble: {
-      borderRadius: 5,
-      marginTop: 8,
-      marginRight: 10,
-      marginLeft: 10,
-      paddingHorizontal: 10,
-      paddingVertical: 5,
-      flexDirection:'row',
-      flex: 1
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginVertical: 4,
+    paddingHorizontal: 12,
+  },
+  rowLeft: {
+    justifyContent: 'flex-start',
+  },
+  rowRight: {
+    justifyContent: 'flex-end',
   },
 
-  messageBubbleLeft: {
-    backgroundColor: '#d5d8d4',
+  avatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(196,130,60,0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(196,130,60,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
+    marginBottom: 2,
+  },
+  avatarText: {
+    fontSize: 13,
   },
 
-  messageBubbleTextLeft: {
-    color: 'black'
+  bubble: {
+    maxWidth: '75%',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  bubbleLeft: {
+    backgroundColor: 'rgba(255,255,255,0.07)',
+    borderWidth: 1,
+    borderColor: 'rgba(196,130,60,0.18)',
+    borderBottomLeftRadius: 4,
+  },
+  bubbleRight: {
+    backgroundColor: AMBER,
+    borderBottomRightRadius: 4,
   },
 
-  messageBubbleRight: {
-    backgroundColor: '#66db30'
+  text: {
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '300',
+  },
+  textLeft: {
+    color: 'rgba(245,230,204,0.9)',
+  },
+  textRight: {
+    color: '#fff',
   },
 
-  messageBubbleTextRight: {
-    color: 'white'
-  },    
-  })
+  spacer: {
+    width: 36,
+  },
+});
